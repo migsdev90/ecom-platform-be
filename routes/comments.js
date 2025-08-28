@@ -1,19 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const Product = require("../models/Product");
+const Comment = require("../models/Comment");
 
 // @desc    Get all products
 // @route   GET /api/products
 // @access  Public
 router.get("/", async (req, res) => {
   try {
-    const products = await Product.find({});
-    console.log("products", products);
-    console.log("no. of products", products.length);
-    console.log("Productos", products);
+    const products = await Comment.find({});
+    console.log("comment", products);
+    console.log("no. of comments", products.length);
 
     // Format the response to include both _id and id
-    const formattedProducts = products.map((product) => ({
+    const formattedComments = products.map((product) => ({
       id: product._id,
       name: product.name,
       _id: product._id, // Include both if needed
@@ -21,8 +20,8 @@ router.get("/", async (req, res) => {
 
     res.json({
       success: true,
-      count: formattedProducts.length,
-      data: formattedProducts,
+      count: formattedComments.length,
+      data: formattedComments,
     });
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -39,7 +38,7 @@ router.get("/", async (req, res) => {
 // @access  Public
 router.get("/:id", async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Comment.findById(req.params.id);
 
     if (!product) {
       return res.status(404).json({

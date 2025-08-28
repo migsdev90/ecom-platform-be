@@ -1,7 +1,8 @@
+const connectDB = require("./config/db");
 require("dotenv").config();
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
+const productRoutes = require("./routes/products");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -10,19 +11,18 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB Atlas
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log("✅ Connected to MongoDB Atlas");
-    // Start Server
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
-  })
-  .catch((err) => console.log("❌ MongoDB Error:", err));
+const startServer = () => {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+};
+
+connectDB(startServer);
 
 // Simple API Route
 app.get("/", (req, res) => {
   res.send("🚀 Node.js + MongoDB Backend Running!");
 });
+
+// Routes
+app.use("/api/products", productRoutes);
